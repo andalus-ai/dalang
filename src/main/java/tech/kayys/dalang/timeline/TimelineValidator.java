@@ -25,14 +25,17 @@ public final class TimelineValidator {
         });
 
         for (ProposedEdit edit : proposal.edits()) {
+            if (edit.decision() == ProposalDecision.REJECTED) continue;
             EditOperation operation = edit.operation();
             if (!trackIds.contains(operation.trackId())) {
                 issues.add(issue("TRACK_NOT_FOUND", "Target track does not exist", operation.trackId(), null, edit.id()));
                 continue;
             }
-            if (operation instanceof InsertClip insert && clipIds.contains(insert.clip().id())) {
-                issues.add(issue("CLIP_ALREADY_EXISTS", "Inserted clip ID already exists", operation.trackId(),
-                        insert.clip().id(), edit.id()));
+            if (operation instanceof InsertClip insert) {
+                if (!clipIds.add(insert.clip().id())) {
+                    issues.add(issue("CLIP_ALREADY_EXISTS", "Inserted clip ID already exists", operation.trackId(),
+                            insert.clip().id(), edit.id()));
+                }
             } else if (operation instanceof TrimClip trim && !clipIds.contains(trim.clipId())) {
                 issues.add(issue("CLIP_NOT_FOUND", "Trim target clip does not exist", operation.trackId(), trim.clipId(), edit.id()));
             } else if (operation instanceof MoveClip move && !clipIds.contains(move.clipId())) {
