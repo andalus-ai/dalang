@@ -46,6 +46,9 @@ public record TimelineDocument(
                 if (!clipIds.add(clip.id())) {
                     throw new IllegalArgumentException("duplicate clip id: " + clip.id());
                 }
+                if (!timelineTimeBase.equals(clip.timelineStart().timeBase())) {
+                    throw new IllegalArgumentException("clip timelineStart must use the document time base");
+                }
             }
         }
     }
