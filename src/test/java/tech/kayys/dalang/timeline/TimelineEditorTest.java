@@ -22,6 +22,20 @@ class TimelineEditorTest {
     }
 
     @Test
+    void insertsClipAndCreatesNewRevision() {
+        var doc = TimelineDocument.empty(UUID.randomUUID(), TB);
+        var track = Track.empty("V1", TrackType.VIDEO, 0);
+        doc = doc.nextRevision(List.of(track));
+        var clip = Clip.create(UUID.randomUUID(), 0,
+                new TimeRange(new MediaTime(0, TB), new MediaTime(25, TB)),
+                new MediaTime(0, TB));
+
+        var next = editor.apply(doc, new InsertClip(doc.revisionId(), track.id(), clip));
+        assertEquals(List.of(clip), next.tracks().getFirst().clips());
+        assertEquals(doc.revisionId(), next.parentRevisionId());
+    }
+
+    @Test
     void movesClipAndCreatesNewRevision() {
         var doc = documentWithClip();
         var track = doc.tracks().getFirst();
