@@ -16,7 +16,7 @@ It is designed to support both conversational video editing and AI-assisted non-
 
 This repository is being bootstrapped. The initial milestone establishes architecture, domain contracts, integration boundaries, and an incremental roadmap before implementation modules are introduced.
 
-See [AGENTS.md](AGENTS.md), [architecture documentation](docs/architecture/OVERVIEW.md), and the [roadmap](docs/roadmap/ROADMAP.md).
+See [AGENTS.md](AGENTS.md), the [architecture overview](docs/architecture/OVERVIEW.md), [domain model](docs/architecture/DOMAIN_MODEL.md), [Manazir integration contract](docs/architecture/MANAZIR_INTEGRATION.md), [Mermaid diagrams](docs/architecture/DIAGRAMS.md), and [roadmap](docs/roadmap/ROADMAP.md).
 
 ## Status
 
