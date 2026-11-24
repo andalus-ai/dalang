@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 
 /** Deterministic in-memory edit application; persistence and authorization are adapter concerns. */
 public final class TimelineEditor {
