@@ -32,6 +32,12 @@ Versioned document includes schema/document/project/revision IDs, parent revisio
 ## Operations
 Initial deterministic operations: insert/append, trim, move, split, remove, reorder clips/tracks, add/update/remove track, track mute/visibility/lock, caption CRUD, basic audio gain/fade, output profile update. Operations carry target IDs and expected base revision. Reject stale writes or require explicit rebase. Applying creates a new immutable revision and structured diff.
 
+## Deterministic edit application (initial implementation)
+
+The initial Java core exposes typed `InsertClip`, `TrimClip`, `MoveClip`, and `RemoveClip` commands through `TimelineEditor`. Every command carries the exact `baseRevisionId`; stale commands are rejected rather than silently rebased. Successful application returns a new immutable document revision and leaves the prior revision untouched.
+
+The timeline document time base governs clip placement coordinates. Source ranges retain their own source time base. Adapters must explicitly rescale at boundaries and choose a rounding policy; the core does not infer a frame rate or silently convert timestamps. The editor is an in-memory domain service only: persistence, authorization, proposal approval, and rendering remain separate responsibilities.
+
 ## Proposal lifecycle
 DRAFT -> PROPOSED -> REVIEW -> APPROVED -> APPLIED -> RENDERING -> COMPLETED. Alternate states: REJECTED, CANCELLED, FAILED. Partial approval is tracked per operation. Record project/base revision, operations/affected ranges, evidence references, rationale/confidence, validation, reviewer decisions and resulting revision.
 
