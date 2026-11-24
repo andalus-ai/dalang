@@ -1,57 +1,33 @@
 # Manazir integration contract
 
 ## Ownership
-
-Dalang owns video-product concepts: workspaces, projects, immutable assets, analysis observations, temporal indexes, edit proposals, timelines, clipper workflows, and render-job intent.
-
-Manazir owns media execution: probing, stream metadata, timestamp-preserving extraction, transcoding, filtering, muxing, and media-runtime diagnostics. Manazir must not depend on Dalang.
+Dalang owns video-product concepts: workspaces, projects, immutable assets, observations, temporal indexes, proposals, timelines, clipper workflows and render intent. Manazir owns media execution: probing, stream metadata, timestamp-preserving extraction, transcoding, filtering, muxing, native diagnostics and backend capability reporting. Manazir must not depend on Dalang.
 
 ## Dependency direction
-
-```text
-Dalang domain and application services
-          |
-          v
-Dalang Manazir adapter
-          |
-          v
-Manazir public media API
-          |
-          v
-Manazir backend SPI
-          |
-          +-- native FFM backend (future)
-          +-- process backend (optional)
-          |
-          v
-generated FFmpeg FFM bindings
+```mermaid
+flowchart TB
+ D[Dalang domain and application services] --> A[Dalang Manazir adapter]
+ A --> API[Manazir typed public media API]
+ API --> SPI[Manazir backend SPI]
+ SPI --> N[Native FFM backend]
+ SPI --> P[Optional process backend]
+ N --> B[Generated FFmpeg FFM bindings]
 ```
+Dalang must not import generated binding packages or expose MemorySegment, pointers, FFmpeg structs or backend enums publicly.
 
-Dalang must not import `tech.kayys.manazir.avutil` or expose `MemorySegment`, native pointers, FFmpeg structs, or FFmpeg-specific enums in its public API.
-
-## Initial operations required by Dalang
-
-1. Probe a media source and return container and stream metadata.
-2. Extract selected video frames with source timestamps and time bases preserved.
-3. Extract audio segments with source timing preserved.
-4. Transcode or render an explicitly described operation plan.
-5. Report progress, cancellation, diagnostics, and output artifacts.
-
-These operations should be added to Manazir incrementally. Dalang must capability-check optional operations rather than assuming all backends support them.
+## Required capabilities
+1. Probe container and stream metadata with exact timing.
+2. Decode/extract timestamped frames, thumbnails, audio segments and waveforms.
+3. Typed transforms: trim, scale, crop, resample and transcode.
+4. Compose/render via typed plans and muxing.
+5. Runtime diagnostics, capability reporting, progress, cancellation, limits and structured errors.
+First vertical slice: probe plus timestamp-preserving extraction. Dalang capability-checks optional operations.
 
 ## Time contract
+Manazir provides low-level integer timestamp/rational timebase primitives. Dalang owns timeline coordinates. Source timestamps and timeline positions are distinct. Conversion specifies rounding. Preserve stream timebase, start timestamp, duration ticks and decoded frame PTS where available.
 
-Manazir is the owner of the shared low-level media timestamp primitives: integer ticks plus a positive rational time base. Dalang timeline positions remain distinct from source timestamps and must carry their own time base. Conversions must be explicit and define rounding behavior. Floating-point seconds are presentation values only.
+## Safety and lifecycle
+Use typed options, not arbitrary shell strings. Process backends use argument vectors and safe filter representations. Bound duration, memory, temp storage, output size and concurrency. Long operations expose progress/cancellation. Native handles and FFM segments never cross public API. Source assets remain read-only; derived artifacts have explicit destinations/provenance. Native library load success is not proof of ABI/symbol compatibility.
 
-## Resource and safety contract
-
-- Media operations accept typed options, not arbitrary shell command strings.
-- Process backends use argument vectors and never interpolate user input into a shell.
-- Every operation has bounded resource options and structured diagnostics.
-- Long-running operations expose cancellation and progress.
-- Native handles and FFM memory segments never cross the Manazir public API.
-- Source assets are read-only; derived artifacts have explicit destinations and provenance.
-
-## Compatibility strategy
-
-Dalang should compile against a released Manazir API version. Until Manazir publishes a stable artifact, keep the adapter isolated and avoid introducing an unverified dependency on generated binding classes. Contract tests should validate timestamp preservation and metadata mapping once the first probe/extraction vertical slice exists.
+## Compatibility
+Dalang compiles against a released Manazir API. Until then isolate adapter and avoid generated binding coupling. Contract tests cover metadata mapping, timebase preservation, cancellation and diagnostics.
