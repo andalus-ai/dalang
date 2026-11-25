@@ -3,7 +3,7 @@
 ## Intended relationship
 Manazir is the intended FFmpeg/media execution foundation for Dalang. Dalang expresses domain intent (probe asset, extract audio, sample frames, render timeline, create clip); Manazir provides reusable media operations.
 
-**Repository inspection limitation:** when this foundation was prepared, GitHub reported `andalus-ai/manazir` as empty (repository size 0; README and source paths unavailable). This is therefore an integration target and capability checklist, not a claim about existing Manazir APIs. Reconcile it with source before implementing an adapter.
+**Current source inventory (2026-11-25):** Manazir now contains rational `MediaTimestamp`/`RationalTimeBase` primitives and runtime capability assessment including `MEDIA_PROBE`. The inspected public source does not yet contain a typed probe operation or stream metadata result. Dalang therefore defines a provider port and domain-owned metadata contracts first; an adapter is deferred until Manazir's probe API is stable. Reconcile it with source before implementing an adapter.
 
 ## Desired capability groups
 ### Probe and ingest
