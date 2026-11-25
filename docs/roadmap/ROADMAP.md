@@ -8,12 +8,14 @@
 - [x] Publish architecture overview, domain model, diagrams and AGENTS.md.
 - [ ] Inventory actual public APIs/build conventions in Andalus Framework, Andalus, AQLI, Aljabr and Manazir.
 - [ ] Define/implement versioned timeline wire schema and Java domain contracts.
-- [ ] Establish Maven structure after source/JDK compatibility review.
+- [x] Establish Maven structure and JDK 22 CI.
+- [x] Define initial immutable asset, stream metadata and media-probe provider contracts.
+- [ ] Implement Manazir probe adapter after its typed public probe API is available.
 - [ ] Add contract tests and standalone example.
 Exit: source-validated architecture, reproducible build, tested temporal/timeline contracts, no generated FFM leakage.
 
 ## M1 — Media foundation and indexing
-Import immutable assets and probe via Manazir; preserve stream IDs/timebases/timestamps/durations; extract timestamped frames/audio; add speech and scene analysis via verified providers; evaluate embedding models by exact identity, task, modality, dimensions, license and AQLI compatibility; use text embeddings for transcript/scene descriptions and verified multimodal models for image/video; implement hybrid lexical/semantic/temporal search and incremental indexing.
+Import immutable assets and probe via a provider port (Manazir adapter when its public API is ready); preserve stream IDs/timebases/timestamps/durations; extract timestamped frames/audio; add speech and scene analysis via verified providers; evaluate embedding models by exact identity, task, modality, dimensions, license and AQLI compatibility; use text embeddings for transcript/scene descriptions and verified multimodal models for image/video; implement hybrid lexical/semantic/temporal search and incremental indexing.
 Exit: retrieve moments with precise source timestamps and evidence.
 
 ## M2 — Timeline, clipper and rendering vertical slice
