@@ -15,6 +15,9 @@ flowchart TB
 ```
 Dalang must not import generated binding packages or expose MemorySegment, pointers, FFmpeg structs or backend enums publicly.
 
+## Current source inventory (2026-11-25)
+The Manazir repository now contains `tech.kayys.manazir.media.time.RationalTimeBase` and `MediaTimestamp`, plus runtime capability types including `MediaCapability.MEDIA_PROBE` and evidence-backed `CapabilityAssessment`. The current public source inspected here does not yet expose a typed probe request/result service or stream metadata model. Therefore Dalang currently defines its own provider port and domain records; no compile-time Manazir dependency or adapter is added until a stable Manazir operation API exists. A future adapter maps Manazir timestamps/timebases into Dalang values without exposing Manazir implementation types.
+
 ## Required capabilities
 1. Probe container and stream metadata with exact timing.
 2. Decode/extract timestamped frames, thumbnails, audio segments and waveforms.
